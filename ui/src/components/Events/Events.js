@@ -1,24 +1,14 @@
 // Renders the component for the Events screen
 import React, { Component } from "react";
-import {
-  Button,
-  Form,
-  FormControl,
-  FormGroup,
-  Row,
-  Table,
-} from "react-bootstrap";
+import { Button, Form, FormControl, FormGroup, Table } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
-import moment from "moment";
+// import moment from "moment";
 // import FileDownload from 'js-file-download';
 import ReactTooltip from "react-tooltip";
 
-import Loading from "./../Loading/Loading";
+// import Loading from "./../Loading/Loading";
 
 import "./Events.css";
-
-const LIMIT = 25;
 
 class Events extends Component {
   constructor(props) {
@@ -44,8 +34,8 @@ class Events extends Component {
 
   renderTable = () => {
     // Creates the table with event information
-    let sortArrow = this.state.sortOrder === "desc" ? "down" : "up";
-    const arrowClass = "fa fa-caret-" + sortArrow + " paging-arrows";
+    // let sortArrow = this.state.sortOrder === "desc" ? "down" : "up";
+    // const arrowClass = "fa fa-caret-" + sortArrow + " paging-arrows";
 
     return (
       <div>
@@ -59,19 +49,19 @@ class Events extends Component {
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr className="table-row">
               <td>1</td>
               <td>Mark</td>
               <td>Otto</td>
               <td>@mdo</td>
             </tr>
-            <tr>
+            <tr className="table-row">
               <td>2</td>
               <td>Jacob</td>
               <td>Thornton</td>
               <td>@fat</td>
             </tr>
-            <tr>
+            <tr className="table-row">
               <td>3</td>
               <td colSpan="2">Larry the Bird</td>
               <td>@twitter</td>
