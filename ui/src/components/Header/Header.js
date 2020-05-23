@@ -1,20 +1,8 @@
-// Header component for the app
-// The header is persistent in all views
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
-import {
-  Navbar,
-  Nav,
-  NavDropdown,
-  Form,
-  FormControl,
-  Button,
-} from "react-bootstrap";
+import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 // import ReactToolTip from 'react-tooltip';
 import axios from "axios";
-
-// import { logout } from './../../utilities/authentication';
-// import { getModules } from './../../utilities/utils';
 
 import "./Header.css";
 
@@ -22,8 +10,17 @@ class Header extends Component {
   render() {
     return (
       <div className="Header">
-        <Navbar bg="light" expand="lg">
-          <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+        <Navbar className="navbar-default">
+          <Navbar.Brand href="#home">
+            <a href="/" className="pull-left">
+              <img
+                src="./fiddler_logo.png"
+                className="image-background"
+                height="40px"
+                alt=""
+              />
+            </a>
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
@@ -43,14 +40,6 @@ class Header extends Component {
                 </NavDropdown.Item>
               </NavDropdown>
             </Nav>
-            <Form inline>
-              <FormControl
-                type="text"
-                placeholder="Search"
-                className="mr-sm-2"
-              />
-              <Button variant="outline-success">Search</Button>
-            </Form>
           </Navbar.Collapse>
         </Navbar>
       </div>
