@@ -1,0 +1,12 @@
+.Home {
+  padding-left: 5%;
+  padding-right: 5%;
+  overflow-y: scroll;
+  padding-bottom: 30px;
+  text-align: left;
+}
+
+.home-header {
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
