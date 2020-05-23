@@ -1,3 +1,17 @@
-# event-explorer
+# Fiddler Analytics Event Explorer
 
-A user interface for viewing events from across multiple data sources
+## Getting started
+
+To install the UI, run the following from the root directory of the project:
+
+```
+make install-ui
+```
+
+After installing the UI dependency, you can run the UI in development mode using the
+following command:
+
+```
+make start-ui
+```
+
