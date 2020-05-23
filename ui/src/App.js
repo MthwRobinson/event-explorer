@@ -2,7 +2,10 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
+import Forbidden from "./components/ErrorPages/Forbidden";
 import Header from "./components/Header/Header";
+import NotFound from "./components/ErrorPages/NotFound";
+import ServerError from "./components/ErrorPages/ServerError";
 
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -15,10 +18,9 @@ class App extends Component {
           <div>
             <Header />
             <Switch>
-              {/* <Route path="/events" component={Events} /> */}
-              {/* <Route path="/server-error" component={ServerError} /> */}
-              {/* <Route path="/forbidden" component={Forbidden} /> */}
-              {/* <Route component={NotFound} /> */}
+              <Route path="/server-error" component={ServerError} />
+              <Route path="/forbidden" component={Forbidden} />
+              <Route component={NotFound} />
             </Switch>
           </div>
         </Router>

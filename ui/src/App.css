@@ -4,7 +4,7 @@
 
 /* Standardized menu styling for across the app */
 .menu-content {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
   color: black;
 }
 
@@ -51,7 +51,7 @@
   font-size: 11px;
   background-color: #007bff;
   color: white;
-  letter-spacing: .5px;
+  letter-spacing: 0.5px;
   line-height: 15px;
   border: 2px solid #007bff;
   border-radius: 40px;
@@ -64,7 +64,6 @@
 .search-term-times {
   margin-top: 2px;
 }
-
 
 /* The filter form that is used in events and participants */
 .filter-form {
@@ -84,16 +83,16 @@
   margin-right: 5px;
 }
 
-
 /* Tabs that are used on the event and report pages*/
 .record-tabs {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
   color: black;
   outline: black;
   margin-bottom: 10px;
 }
 
-.record-tab, .record-tab:hover {
+.record-tab,
+.record-tab:hover {
   color: black;
   font-size: 22px;
   text-decoration: none;
@@ -138,7 +137,7 @@
   float: right;
 }
 
-@media(max-width: 800px){
+@media (max-width: 800px) {
   .event-map {
     display: none;
   }
@@ -148,7 +147,7 @@
   }
 }
 
-@media(min-width: 800px){
+@media (min-width: 800px) {
   .event-map-summary-area {
     width: 60%;
   }
@@ -201,7 +200,7 @@
 @media (max-width: 800px) {
   .quick-facts-buffer {
     margin-left: 15%;
-    margin-right: 25%
+    margin-right: 25%;
   }
 }
 
@@ -216,7 +215,7 @@
   padding-left: 15px;
 }
 
-.event-icons:hover{
+.event-icons:hover {
   cursor: pointer;
 }
 
@@ -266,18 +265,18 @@
 
 /* Styles for success and error messages. */
 .error-msg {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
   color: red;
 }
 
 .success-msg {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
   color: green;
 }
 
 /* Styles used for file uploads. */
 .upload-file {
-  font-family: 'Source Sans Serif', sans-serif;
+  font-family: "Source Sans Serif", sans-serif;
   margin-bottom: 10px;
   margin-top: 10px;
 }
