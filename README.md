@@ -38,3 +38,30 @@ new requirement, make sure to install dependencies again with
 ```
 make pip-install
 ```
+
+## Linting
+
+Linting for the JavaScript UI uses `prettier` and linting for the Python backend uses
+`black`. After editing code, you can check to make sure your changes conform to the
+project's style standards by running
+
+```
+make lint
+```
+
+If the linting job fails, you can correct stylistic errors by running
+
+```
+make tidy
+```
+
+Note, linting runs during the CI/CD build as part of the test job.
+
+## Tests
+
+To run the unit tests for the Python backend, make sure `requirements/test.txt` are
+installed and run the following command:
+
+```
+make test
+```
