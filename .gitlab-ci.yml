@@ -11,6 +11,7 @@ test:
     - python3 -m venv test_environment
     - . test_environment/bin/activate
     - make pip-install
+    - make install-nvm
   script:
     - make lint
   # coverage: '/TOTAL.*\s+(\d+%)$/'

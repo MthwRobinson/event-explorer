@@ -13,6 +13,9 @@ install-ui:
 	cd ui && npm install
 	cd ..
 
+install-nvm:
+	sh scripts/install_nvm.sh
+
 pip-compile:
 	pip-compile requirements/base.in
 	pip-compile requirements/dev.in
