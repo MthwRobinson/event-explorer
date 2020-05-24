@@ -23,7 +23,22 @@ To install the Python backend, run the following command:
 make pip-install
 ```
 
-## Adding New Requirements
+To install the database tables, you'll need to add the URI of the RDS database as an
+environmental variable called `FIDDLER_RDS` and install `psql` using the following
+commmand:
+
+```
+sudo apt-get install postgresql postgresql-contrib
+```
+
+Once `psql` is installed, you can set up the database tables using the following
+command:
+
+```
+make setup-db
+```
+
+### Adding New Requirements
 
 To introduce new Python requirements, add them to the appropriate `.in` file in the
 `requirements` folder and then run:
@@ -39,7 +54,7 @@ new requirement, make sure to install dependencies again with
 make pip-install
 ```
 
-## Linting
+### Linting
 
 Linting for the JavaScript UI uses `prettier` and linting for the Python backend uses
 `black`. After editing code, you can check to make sure your changes conform to the
@@ -57,7 +72,7 @@ make tidy
 
 Note, linting runs during the CI/CD build as part of the test job.
 
-## Tests
+### Tests
 
 To run the unit tests for the Python backend, make sure `requirements/test.txt` are
 installed and run the following command:
