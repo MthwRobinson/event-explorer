@@ -1,0 +1,17 @@
+stages:
+  - test
+
+test:
+  image: python:3.8
+  stage: test
+  allow_failure: false
+  before_script:
+    - apt-get -qq update
+    - apt-get -qq install -y python-virtualenv python3-pip
+    - python3 -m venv test_environment
+    - . test_environment/bin/activate
+    - make pip-install
+  script:
+    - make lint
+  # coverage: '/TOTAL.*\s+(\d+%)$/'
+
