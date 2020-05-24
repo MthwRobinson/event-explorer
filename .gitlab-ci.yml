@@ -12,6 +12,7 @@ test:
     - . test_environment/bin/activate
     - make pip-install
     - make install-nvm
+    - npm install prettier@2.0.5
   script:
     - make lint
   # coverage: '/TOTAL.*\s+(\d+%)$/'
