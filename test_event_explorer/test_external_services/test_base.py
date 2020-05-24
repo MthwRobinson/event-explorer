@@ -4,10 +4,8 @@ import requests
 import event_explorer.external_services.base as base
 
 
-base.Session.request = lambda self, method, url, *args, **kwargs: url
-
-
 def test_external_service():
+    base.Session.request = lambda self, method, url, *args, **kwargs: url
     external_service = base.ExternalService()
     external_service.base_url = "https://api.dogs.com"
     assert external_service.get("/bones") == "https://api.dogs.com/bones"
@@ -35,3 +33,24 @@ def test_stub_methods_raise_error(method):
 def test_base_classes_return_source(cls):
     cls.source = "Test Source"
     assert cls.get_source() == "Test Source"
+
+
+class MockResponse:
+    def __init__(self, status_code):
+        self.status_code = status_code
+
+
+def test_get_url_returns_response_with_200():
+    base.Session.request = lambda self, method, url, *args, **kwargs: MockResponse(200)
+    external_service = base.ExternalService()
+    external_service.base_url = "https://api.dogs.com"
+    response = base.get("/bones", external_service)
+    assert response.status_code == 200
+
+
+def test_get_url_raises_with_bad_status_code():
+    base.Session.request = lambda self, method, url, *args, **kwargs: MockResponse(500)
+    external_service = base.ExternalService()
+    external_service.base_url = "https://api.dogs.com"
+    with pytest.raises(ValueError):
+        response = base.get("/bones", external_service)
