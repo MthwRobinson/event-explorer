@@ -11,9 +11,7 @@ test:
     - python3 -m venv test_environment
     - . test_environment/bin/activate
     - make pip-install
-    - make install-nvm
-    - npm install prettier@2.0.5
   script:
-    - make lint
+    - black event_explorer --check
   # coverage: '/TOTAL.*\s+(\d+%)$/'
 
