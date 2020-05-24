@@ -1,7 +1,7 @@
-import requests
+from requests import Session
 
 
-class ExternalService(requests.Session):
+class ExternalService(Session):
     """Base class for making API calls from across REST APIs."""
 
     base_url = None

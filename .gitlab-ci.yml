@@ -13,5 +13,5 @@ test:
     - make pip-install
   script:
     - make lint-black
-  # coverage: '/TOTAL.*\s+(\d+%)$/'
-
+    - make test
+  coverage: '/TOTAL.*\s+(\d+%)$/'

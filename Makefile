@@ -4,10 +4,15 @@ lint:
 
 lint-black:
 	black event_explorer --check
+	black test_event_explorer --check
 
 tidy:
 	prettier ui/src --write
 	black event_explorer
+	black test_event_explorer
+
+test:
+	pytest test_event_explorer --cov=event_explorer
 
 start-ui:
 	cd ui && npm run start

@@ -1,4 +1,6 @@
 # Fiddler Analytics Event Explorer
+[![coverage report](https://gitlab.com/fiddler-analytics/event-explorer/badges/master/coverage.svg)](https://gitlab.com/fiddler-analytics/event-explorer/commits/master)
+
 
 ## Getting started
 
