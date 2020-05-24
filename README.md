@@ -15,3 +15,24 @@ following command:
 make start-ui
 ```
 
+To install the Python backend, run the following command:
+
+```
+make pip-install
+```
+
+## Adding New Requirements
+
+To introduce new Python requirements, add them to the appropriate `.in` file in the
+`requirements` folder and then run:
+
+```
+make pip-compile
+```
+
+The new requirements will be pinned in the `requirements/*.txt` files. After adding a
+new requirement, make sure to install dependencies again with
+
+```
+make pip-install
+```
