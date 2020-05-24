@@ -1,5 +1,8 @@
-lint-ui:
-	prettier ui/src --write
+lint:
+	npx prettier@2.0.5 ui/src --check
+
+tidy:
+	npx prettier@2.0.5 ui/src --write
 
 start-ui:
 	cd ui && npm run start
