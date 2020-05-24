@@ -1,11 +1,9 @@
-from urllib.parse import urljoin
-
 import os
 import requests
 
 
 class Eventbrite(requests.Session):
-    base_url = "https://www.eventbriteapi.com/v3/"
+    base_url = "https://www.eventbriteapi.com/v3"
 
     def __init__(self):
         super().__init__()
@@ -19,7 +17,7 @@ class Eventbrite(requests.Session):
 
     def create_url(self, url):
         """Create the URL based off this partial path."""
-        return urljoin(self.base_url, url)
+        return f"{self.base_url}{url}"
 
     def _set_header_token(self):
         token = os.environ.get("EVENTBRITE_TOKEN", None)

@@ -1,9 +1,12 @@
 lint:
-	npx prettier@2.0.5 ui/src --check
+	prettier ui/src --check
+	black event_explorer --check
+
+lint-black:
 	black event_explorer --check
 
 tidy:
-	npx prettier@2.0.5 ui/src --write
+	prettier ui/src --write
 	black event_explorer
 
 start-ui:

@@ -2,7 +2,7 @@ stages:
   - test
 
 test:
-  image: ubuntu:latest
+  image: python:3.8
   stage: test
   allow_failure: false
   before_script:
@@ -11,8 +11,7 @@ test:
     - python3 -m venv test_environment
     - . test_environment/bin/activate
     - make pip-install
-    - make install-nvm
   script:
-    - make lint
+    - make lint-black
   # coverage: '/TOTAL.*\s+(\d+%)$/'
 
