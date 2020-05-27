@@ -91,4 +91,4 @@ def get(url, session):
         return response
     else:
         status_code = response.status_code
-        raise ValueError(f"{str(session)} API failed. Status code: {status_code}")
+        raise ValueError(f"{session} API failed. Status code: {status_code}")
