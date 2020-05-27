@@ -1,3 +1,5 @@
+import datetime
+
 import event_explorer.database.utilities as utilities
 
 
@@ -37,3 +39,28 @@ class MockAttendee:
 def test_load_attendee(monkeypatch):
     monkeypatch.setattr(utilities, "connect", lambda: MockConnection())
     utilities.load_attendee(MockAttendee(), event_id="12345")
+
+
+class MockEvent:
+    def get_id(self):
+        return "12345"
+
+    def get_name(self):
+        return "Big Dog Party!"
+
+    def get_source(self):
+        return "Dogs.com"
+
+    def get_time(self):
+        return datetime.datetime(2020, 1, 10, 3, 20)
+
+    def get_description(self):
+        return "Where dogs go to dog!"
+
+    def get_attendees(self):
+        return []
+
+
+def test_load_event(monkeypatch):
+    monkeypatch.setattr(utilities, "connect", lambda: MockConnection())
+    utilities.load_event(MockEvent())
