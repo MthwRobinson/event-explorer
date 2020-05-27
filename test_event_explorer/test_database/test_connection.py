@@ -12,7 +12,7 @@ def test_connection_works_with_env(monkeypatch):
     assert connection.connect() == "test_host"
 
 
-def test_connetion_raises_error_with_no_env(monkeypatch):
+def test_connection_raises_error_with_no_env(monkeypatch):
     monkeypatch.setattr(os.environ, "get", lambda *args, **kwargs: None)
     monkeypatch.setattr(psycopg2, "connect", lambda user, host, dbname: host)
     with pytest.raises(ValueError):
