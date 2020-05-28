@@ -64,3 +64,37 @@ def load_event(event):
     with connection.cursor() as cursor:
         cursor.execute(sql, values)
     connection.commit()
+
+
+def delete_event(event_id):
+    """Deletes an event from the event table
+
+    Parameters
+    ----------
+    event_id : str
+        The id for the event to delete
+    """
+    sql = f"""
+        DELETE FROM event_explorer.events
+        WHERE id = "{event_id}"
+    """
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+    connection.commit()
+
+
+def delete_event_attendees(event_id):
+    """Deletes attendees for the specified event
+
+    Parameters
+    ----------
+    event_id : str
+        The id for the event to delete
+    """
+    sql = f"""
+        DELETE FROM event_explorer.attendees
+        WHERE event_id = "{event_id}"
+    """
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+    connection.commit()

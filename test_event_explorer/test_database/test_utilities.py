@@ -64,3 +64,13 @@ class MockEvent:
 def test_load_event(monkeypatch):
     monkeypatch.setattr(utilities, "connect", lambda: MockConnection())
     utilities.load_event(MockEvent())
+
+
+def test_delete_event(monkeypatch):
+    monkeypatch.setattr(utilities, "connect", lambda: MockConnection())
+    utilities.delete_event("12345")
+
+
+def test_delete_event_attendees(monkeypatch):
+    monkeypatch.setattr(utilities, "connect", lambda: MockConnection())
+    utilities.delete_event_attendees("12345")
