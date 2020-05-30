@@ -9,6 +9,7 @@ import event_explorer.external_services.eventbrite as eventbrite_service
 class MockResponse:
     def __init__(self, response):
         self.response = response
+        self.status_code = 200
 
     def json(self):
         return self.response
@@ -98,21 +99,28 @@ def test_eventbrite_event_loads_attendees(monkeypatch):
 def test_load_eventbrite(monkeypatch):
     def mock_get(url):
         if "attendees" in url:
-            response = {"attendees": [TEST_ATTENDEE, TEST_ATTENDEE, TEST_ATTENDEE]}
+            response = {"attendees": TEST_ATTENDEES}
         else:
             response = {
                 "events": [TEST_EVENT, TEST_EVENT, TEST_EVENT],
                 "pagination": {
                     "continuation": "abc",
-                    "has_more_items": continuation not in url,
+                    "has_more_items": "continuation" not in url,
                 },
             }
         return MockResponse(response)
 
-    monkeypatch.setattr(os.environ, "get", lambda *args, **kwargs: "TEST_TOKEN")
-    monkeypatch.setattr(eventbrite_service, "get", lambda url, session: mock_get(url))
-    monkeypatch.setattr(eventbrite_service, "load_event", lambda: None)
-    monkeypatch.setattr(eventbrite_service, "delete_event", lambda: None)
-    monkeypatch.setattr(eventbrite_service, "load_attendee", lambda: None)
-    monkeypatch.setattr(eventbrite_service, "delete_event_attendees", lambda: None)
-    eventbrite = eventbrite_service.Eventbrite()
+    eventbrite_service.Eventbrite.__init__ = lambda self: None
+    eventbrite_service.Eventbrite.get = lambda self, url: mock_get(url)
+
+    monkeypatch.setattr(eventbrite_service, "load_event", lambda *args, **kwargs: None)
+    monkeypatch.setattr(
+        eventbrite_service, "delete_event", lambda *args, **kwargs: None
+    )
+    monkeypatch.setattr(
+        eventbrite_service, "load_attendee", lambda *args, **kwargs: None
+    )
+    monkeypatch.setattr(
+        eventbrite_service, "delete_event_attendees", lambda *args, **kwargs: None
+    )
+    eventbrite_service.load_eventbrite()
