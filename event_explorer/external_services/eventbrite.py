@@ -3,6 +3,12 @@ import os
 
 import requests
 
+from event_explorer.database.utilities import (
+    load_attendee,
+    load_event,
+    delete_event,
+    delete_event_attendees,
+)
 from event_explorer.external_services.base import Attendee, Event, ExternalService, get
 
 
@@ -68,10 +74,34 @@ class EventbriteAttendee(Attendee):
         return cls(attendee)
 
     def get_first_name(self):
-        return self.attendee["profile"]["first_name"]
+        return self.attendee["profile"].get("first_name", None)
 
     def get_last_name(self):
-        return self.attendee["profile"]["last_name"]
+        return self.attendee["profile"].get("last_name", None)
 
     def get_email(self):
-        return self.attendee["profile"]["email"]
+        return self.attendee["profile"].get("email", None)
+
+
+def load_eventbrite(max_events=500):
+    eventbrite = Eventbrite()
+    response = eventbrite.get("/users/me/events?order_by=start_desc")
+    has_more_items = response.json()["pagination"].get("has_more_items", None)
+    count = 0
+    while count < max_events and has_more_items:
+        for item in response.json()["events"]:
+            event = EventbriteEvent.from_dict(item)
+            event_id, source = event.get_id(), event.get_source()
+            delete_event(event_id, source)
+            delete_event_attendees(event_id, source)
+            load_event(event)
+
+            for attendee in event.get_attendees():
+                load_attendee(attendee, event_id, source)
+            count += 1
+
+        continuation = response.json()["pagination"].get("continuation", None)
+        response = eventbrite.get(
+            f"/users/me/events?order_by=start_desc&continuation={continuation}"
+        )
+        has_more_items = response.json()["pagination"].get("has_more_items", None)

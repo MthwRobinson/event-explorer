@@ -11,7 +11,7 @@ def _connect():
     connection = connect()
 
 
-def load_attendee(attendee, event_id):
+def load_attendee(attendee, event_id, source):
     """Loads an attendee into the database to be served to the front end.
 
     Parameters
@@ -24,15 +24,16 @@ def load_attendee(attendee, event_id):
     _connect()
     values = (
         event_id,
+        source,
         attendee.get_first_name(),
         attendee.get_last_name(),
         attendee.get_email(),
     )
     sql = """
     INSERT INTO event_explorer.attendees
-    (event_id, first_name, last_name, email)
+    (event_id, source, first_name, last_name, email)
     VALUES
-    (%s, %s, %s, %s)
+    (%s, %s, %s, %s, %s)
     """
     with connection.cursor() as cursor:
         cursor.execute(sql, values)
@@ -57,7 +58,7 @@ def load_event(event):
     )
     sql = """
     INSERT INTO event_explorer.events
-    (id, name, description, start_time, source)
+    (id, name, start_time, description, source)
     VALUES
     (%s, %s, %s, %s, %s)
     """
@@ -66,34 +67,42 @@ def load_event(event):
     connection.commit()
 
 
-def delete_event(event_id):
+def delete_event(event_id, source):
     """Deletes an event from the event table
 
     Parameters
     ----------
     event_id : str
         The id for the event to delete
+    source : str
+        The source for the event to delete
     """
+    _connect()
     sql = f"""
         DELETE FROM event_explorer.events
-        WHERE id = "{event_id}"
+        WHERE id = '{event_id}'
+        AND source = '{source}'
     """
     with connection.cursor() as cursor:
         cursor.execute(sql)
     connection.commit()
 
 
-def delete_event_attendees(event_id):
+def delete_event_attendees(event_id, source):
     """Deletes attendees for the specified event
 
     Parameters
     ----------
     event_id : str
         The id for the event to delete
+    source : str
+        The source for the event to delete
     """
+    _connect()
     sql = f"""
         DELETE FROM event_explorer.attendees
-        WHERE event_id = "{event_id}"
+        WHERE event_id = '{event_id}'
+        AND source = '{source}'
     """
     with connection.cursor() as cursor:
         cursor.execute(sql)

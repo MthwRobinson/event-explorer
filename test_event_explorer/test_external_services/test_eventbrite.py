@@ -93,3 +93,26 @@ def test_eventbrite_event_loads_attendees(monkeypatch):
         attendees[0].get_last_name(),
         attendees[0].get_email(),
     ) == ("Tiki", "Robinson", "tiki@robinson.io")
+
+
+def test_load_eventbrite(monkeypatch):
+    def mock_get(url):
+        if "attendees" in url:
+            response = {"attendees": [TEST_ATTENDEE, TEST_ATTENDEE, TEST_ATTENDEE]}
+        else:
+            response = {
+                "events": [TEST_EVENT, TEST_EVENT, TEST_EVENT],
+                "pagination": {
+                    "continuation": "abc",
+                    "has_more_items": continuation not in url,
+                },
+            }
+        return MockResponse(response)
+
+    monkeypatch.setattr(os.environ, "get", lambda *args, **kwargs: "TEST_TOKEN")
+    monkeypatch.setattr(eventbrite_service, "get", lambda url, session: mock_get(url))
+    monkeypatch.setattr(eventbrite_service, "load_event", lambda: None)
+    monkeypatch.setattr(eventbrite_service, "delete_event", lambda: None)
+    monkeypatch.setattr(eventbrite_service, "load_attendee", lambda: None)
+    monkeypatch.setattr(eventbrite_service, "delete_event_attendees", lambda: None)
+    eventbrite = eventbrite_service.Eventbrite()

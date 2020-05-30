@@ -38,7 +38,7 @@ class MockAttendee:
 
 def test_load_attendee(monkeypatch):
     monkeypatch.setattr(utilities, "connect", lambda: MockConnection())
-    utilities.load_attendee(MockAttendee(), event_id="12345")
+    utilities.load_attendee(MockAttendee(), event_id="12345", source="Fake Source")
 
 
 class MockEvent:
@@ -68,9 +68,9 @@ def test_load_event(monkeypatch):
 
 def test_delete_event(monkeypatch):
     monkeypatch.setattr(utilities, "connect", lambda: MockConnection())
-    utilities.delete_event("12345")
+    utilities.delete_event("12345", "Fake Source")
 
 
 def test_delete_event_attendees(monkeypatch):
     monkeypatch.setattr(utilities, "connect", lambda: MockConnection())
-    utilities.delete_event_attendees("12345")
+    utilities.delete_event_attendees("12345", "Fake Source")
