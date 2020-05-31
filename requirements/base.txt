@@ -10,6 +10,7 @@ idna==2.9                 # via requests
 numpy==1.18.4             # via pandas
 pandas==1.0.3             # via -r requirements/base.in
 psycopg2-binary==2.8.5    # via -r requirements/base.in
+pyjwt==1.7.1              # via -r requirements/base.in
 python-dateutil==2.8.1    # via pandas
 pytz==2020.1              # via pandas
 requests==2.23.0          # via -r requirements/base.in
