@@ -126,7 +126,13 @@ Once integrated into the UI, the `ExternalServices` class for APIs will also sup
 OAUTH2 workflow. To use a given API, you can use a workflow similar to the following:
 
 ```python
+import os
 from event_explorer.external_services.zoom import Zoom
+
+# Only required if you don't have these set in your environment.
+# For security purpose, DO NOT hard code these in a script.
+os.environ["ZOOM_API_KEY"] = "my_api_key"
+os.environ["ZOOM_API_SECRET"] = "my_api_secret"
 
 zoom = Zoom()
 response = zoom.get("/users") # Pulls a list of users for your account
