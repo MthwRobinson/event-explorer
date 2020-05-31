@@ -80,3 +80,55 @@ installed and run the following command:
 ```
 make test
 ```
+
+## Using the Python Package
+
+### Connecting to the database
+
+The Python package includes a utility for connecting to the RDS database. The utility
+assumes you have the RDS URI stored as an environmental variable, so you'll want
+something similar to the following in `$HOME/.bashrc`:
+
+```bash
+export FIDDLER_RDS=<fiddler-rds-uri>
+```
+
+You should replace `<fiddler-rds-uri>` with the actual URI, which you can get by asking Matt
+if you don't have it already. You'll also need to set up a `.pgpass` in your home
+directory with the following contents. Run `chmod 0600 ~/.pgpass` to ensure the file has
+the correct security permissions, otherwise authentication will fail:
+
+```
+<fiddler-rds-uri>:5432:<fiddler-rds-user>:<fiddler-rds-pass>
+```
+
+Once you have all that set up, and assuming you have the Python package installed, you
+can connect to the database with the following Python code:
+
+```python
+from event_explorer.database.connection import connect
+
+connection = connect()
+```
+
+### Using APIs for External Services
+
+API calls in Event Explorer implemented wrappers around the `requests.Session` class
+that automatically apply authenticate to the API and apply the base url for the API.
+Credentials are read in from the following environmental variables. To use a given API,
+you'll need to export these environmental variable prior to running Python.
+
+- `EVENTBRITE_TOKEN`
+- `ZOOM_API_KEY`
+- `ZOOM_API_SECRET`
+
+Once integrated into the UI, the `ExternalServices` class for APIs will also support an
+OAUTH2 workflow. To use a given API, you can use a workflow similar to the following:
+
+```python
+from event_explorer.external_services.zoom import Zoom
+
+zoom = Zoom()
+response = zoom.get("/users") # Pulls a list of users for your account
+users = response.json()
+```
