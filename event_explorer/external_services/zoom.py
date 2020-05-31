@@ -65,9 +65,28 @@ class ZoomEvent(Event):
             response = get(f"/meetings/{event_id}/registrants", Zoom())
             self.attendees = [
                 ZoomAttendee.from_dict(attendee)
-                for attendee in response.json()["attendees"]
+                for attendee in response.json()["registrants"]
             ]
         return self.attendees
+
+
+class ZoomAttendee(Attendee):
+    """Class for representing attendees of Zoom events."""
+
+    source = "Zoom"
+
+    @classmethod
+    def from_dict(cls, attendee):
+        return cls(attendee)
+
+    def get_first_name(self):
+        return self.attendee.get("first_name", None)
+
+    def get_last_name(self):
+        return self.attendee.get("last_name", None)
+
+    def get_email(self):
+        return self.attendee.get("email", None)
 
 
 def generate_jwt(key, secret):

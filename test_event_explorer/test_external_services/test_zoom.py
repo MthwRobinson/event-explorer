@@ -25,14 +25,8 @@ TEST_EVENT = {
 
 
 TEST_ATTENDEES = {
-    "attendees": [
-        {
-            "profile": {
-                "first_name": "Tiki",
-                "last_name": "Robinson",
-                "email": "tiki@robinson.io",
-            }
-        }
+    "registrants": [
+        {"first_name": "Tiki", "last_name": "Robinson", "email": "tiki@robinson.io",}
     ]
 }
 
@@ -64,64 +58,34 @@ def test_zoom_loads_from_dict():
     )
 
 
-# def test_zoom_loads_from_id(monkeypatch):
-#     monkeypatch.setattr(os.environ, "get", lambda *args, **kwargs: "TEST_TOKEN")
-#     monkeypatch.setattr(
-#         zoom_service, "get", lambda url, session: MockResponse(TEST_EVENT)
-#     )
-#     event = zoom_service.ZoomEvent.from_id("12345")
-#     assert (
-#         event.get_id(),
-#         event.get_name(),
-#         event.get_time(),
-#         event.get_description(),
-#     ) == (
-#         TEST_EVENT["uuid"],
-#         TEST_EVENT["topic"],
-#         datetime.datetime(2020, 4, 10, 23, 4, tzinfo=tz.gettz("America/New_York"),
-#         None,
-#     )
+def test_zoom_loads_from_id(monkeypatch):
+    monkeypatch.setattr(os.environ, "get", lambda *args, **kwargs: "TEST_TOKEN")
+    monkeypatch.setattr(
+        zoom_service, "get", lambda url, session: MockResponse(TEST_EVENT)
+    )
+    event = zoom_service.ZoomEvent.from_id("12345")
+    assert (
+        event.get_id(),
+        event.get_name(),
+        event.get_time(),
+        event.get_description(),
+    ) == (
+        TEST_EVENT["uuid"],
+        TEST_EVENT["topic"],
+        datetime.datetime(2020, 4, 10, 23, 4, tzinfo=tz.gettz("America/New_York")),
+        None,
+    )
 
 
-# def test_zoom_event_loads_attendees(monkeypatch):
-#     monkeypatch.setattr(os.environ, "get", lambda *args, **kwargs: "TEST_TOKEN")
-#     monkeypatch.setattr(
-#         zoom_service, "get", lambda url, session: MockResponse(TEST_ATTENDEES)
-#     )
-#     event = zoom_service.ZoomEvent.from_dict(TEST_EVENT)
-#     attendees = event.get_attendees()
-#     assert (
-#         attendees[0].get_first_name(),
-#         attendees[0].get_last_name(),
-#         attendees[0].get_email(),
-#     ) == ("Tiki", "Robinson", "tiki@robinson.io")
-#
-#
-# def test_load_zoom(monkeypatch):
-#     def mock_get(url):
-#         if "attendees" in url:
-#             response = {"attendees": TEST_ATTENDEES}
-#         else:
-#             response = {
-#                 "events": [TEST_EVENT, TEST_EVENT, TEST_EVENT],
-#                 "pagination": {
-#                     "continuation": "abc",
-#                     "has_more_items": "continuation" not in url,
-#                 },
-#             }
-#         return MockResponse(response)
-#
-#     zoom_service.Zoom.__init__ = lambda self: None
-#     zoom_service.Zoom.get = lambda self, url: mock_get(url)
-#
-#     monkeypatch.setattr(zoom_service, "load_event", lambda *args, **kwargs: None)
-#     monkeypatch.setattr(
-#         zoom_service, "delete_event", lambda *args, **kwargs: None
-#     )
-#     monkeypatch.setattr(
-#         zoom_service, "load_attendee", lambda *args, **kwargs: None
-#     )
-#     monkeypatch.setattr(
-#         zoom_service, "delete_event_attendees", lambda *args, **kwargs: None
-#     )
-#     zoom_service.load_zoom()
+def test_zoom_event_loads_attendees(monkeypatch):
+    monkeypatch.setattr(os.environ, "get", lambda *args, **kwargs: "TEST_TOKEN")
+    monkeypatch.setattr(
+        zoom_service, "get", lambda url, session: MockResponse(TEST_ATTENDEES)
+    )
+    event = zoom_service.ZoomEvent.from_dict(TEST_EVENT)
+    attendees = event.get_attendees()
+    assert (
+        attendees[0].get_first_name(),
+        attendees[0].get_last_name(),
+        attendees[0].get_email(),
+    ) == ("Tiki", "Robinson", "tiki@robinson.io")
