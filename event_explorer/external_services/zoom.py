@@ -20,7 +20,7 @@ class Zoom(ExternalService):
         secret = os.environ.get("ZOOM_API_SECRET", None)
         if not all([key, secret]):
             raise ValueError(
-                "ZOOM_API_KEY or ZOOM_API_SECRET environmental " "variable not set"
+                "ZOOM_API_KEY or ZOOM_API_SECRET environmental variable not set"
             )
         token = generate_jwt(key, secret)
         self.headers.update({"Authorization": f"Bearer {token}"})
