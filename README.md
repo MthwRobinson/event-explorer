@@ -138,3 +138,57 @@ zoom = Zoom()
 response = zoom.get("/users") # Pulls a list of users for your account
 users = response.json()
 ```
+
+Each external service also has its own events and attendees subclasses. You can
+instantiate these classes using a dictionary or an event id. If instantiating from a
+dictionary, the input is the event dictionary returned by the API call. The following
+code shows how to instantiate the same Zoom event using both options:
+
+```python
+from event_explorer.external_services.zoom import ZoomEvent
+
+zoom_event = ZoomEvent.from_dict({
+  "uuid": "mlghmfghlBBB",
+  "id": 11111,
+  "host_id": "abckjdfhsdkjf",
+  "topic": "Zoom Meeting",
+  "type": 2,
+  "start_time": "2019-08-16T02:00:00Z",
+  "duration": 30,
+  "timezone": "America/Los_Angeles",
+  "created_at": "2019-08-16T01:13:12Z",
+  "join_url": "https://zoom.us/j/11111"
+})
+
+same_zoom_event = ZoomEvent.from_id("mlghmfgh1BBB")
+```
+
+After instantiating the event, you can use the class methods to retrieve event metadata.
+For example, `zoom_event.get_id()` will return the event id and
+`zoom_event.get_attendees()` will return the attendees. If you retrieve the attendees,
+the result will be a list of `ZoomAttendee` objects. An equivalent workflow holds for
+other external services.
+
+Note, for the above to work, you'll need the appropriate API token environmental
+variables set (see above for details).
+
+### Loading events into the database
+
+Each external service has a helper method for loading events retrieved from the API into
+the database. For this to work, you'll need a `.pgpass` file setup with your database
+credentials, and the database URI set in the `FIDDLER_RDS` environmental variables. You
+can load events and attendees into the database using the following workflow:
+
+```python
+from event_explorer.external_services.zoom import load_zoom
+
+load_zoom(user_id="jabber@parrots.com", max_events=20)
+```
+
+Each external service has its own load function. Do note, not all load functions have
+the same parameters. For example, `load_zoom` can take a user id, but `load_eventbrite`
+does not. Run `load_zoom?` from an iPython session or look in the code to see what
+options are available.
+
+Note, for the above to work, you'll need the appropriate API token environmental
+variables set (see above for details).
