@@ -113,14 +113,7 @@ def test_load_eventbrite(monkeypatch):
     eventbrite_service.Eventbrite.__init__ = lambda self: None
     eventbrite_service.Eventbrite.get = lambda self, url: mock_get(url)
 
-    monkeypatch.setattr(eventbrite_service, "load_event", lambda *args, **kwargs: None)
     monkeypatch.setattr(
-        eventbrite_service, "delete_event", lambda *args, **kwargs: None
-    )
-    monkeypatch.setattr(
-        eventbrite_service, "load_attendee", lambda *args, **kwargs: None
-    )
-    monkeypatch.setattr(
-        eventbrite_service, "delete_event_attendees", lambda *args, **kwargs: None
+        eventbrite_service, "load_event_data", lambda *args, **kwargs: None
     )
     eventbrite_service.load_eventbrite()

@@ -89,3 +89,54 @@ def test_zoom_event_loads_attendees(monkeypatch):
         attendees[0].get_last_name(),
         attendees[0].get_email(),
     ) == ("Tiki", "Robinson", "tiki@robinson.io")
+
+
+def test_load_zoom(monkeypatch):
+    def mock_get(url):
+        if "registrants" in url:
+            response = TEST_ATTENDEES
+        else:
+            response = {
+                "meetings": [TEST_EVENT, TEST_EVENT, TEST_EVENT, TEST_EVENT],
+                "page_count": 1,
+                "page_number": 1,
+            }
+        return MockResponse(response)
+
+    zoom_service.Zoom.__init__ = lambda self: None
+    zoom_service.Zoom.get = lambda self, url: mock_get(url)
+
+    monkeypatch.setattr(zoom_service, "load_event_data", lambda *args, **kwargs: None)
+    zoom_service.load_zoom()
+
+
+def test_list_users(monkeypatch):
+    def mock_get(url):
+        response = {
+            "page_count": 1,
+            "page_number": 1,
+            "page_size": 30,
+            "total_records": 1,
+            "users": [
+                {
+                    "first_name": "Tiki",
+                    "last_name": "Parrot",
+                    "email": "tiki@parrots.ai",
+                    "status": "active",
+                }
+            ],
+        }
+        return MockResponse(response)
+
+    zoom_service.Zoom.__init__ = lambda self: None
+    zoom_service.Zoom.get = lambda self, url: mock_get(url)
+
+    users = zoom_service.list_zoom_users()
+    assert users == [
+        {
+            "first_name": "Tiki",
+            "last_name": "Parrot",
+            "email": "tiki@parrots.ai",
+            "status": "active",
+        }
+    ]

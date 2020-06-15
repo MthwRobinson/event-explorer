@@ -3,12 +3,7 @@ import os
 
 import requests
 
-from event_explorer.database.utilities import (
-    load_attendee,
-    load_event,
-    delete_event,
-    delete_event_attendees,
-)
+from event_explorer.database.utilities import load_event_data
 from event_explorer.external_services.base import Attendee, Event, ExternalService, get
 
 
@@ -84,6 +79,13 @@ class EventbriteAttendee(Attendee):
 
 
 def load_eventbrite(max_events=500):
+    """Loads Eventbrite events into the database
+
+    Parameters
+    ----------
+    max_events : int
+        The maximum number of events to load into the database
+    """
     eventbrite = Eventbrite()
     response = eventbrite.get("/users/me/events?order_by=start_desc")
     has_more_items = response.json()["pagination"].get("has_more_items", None)
@@ -91,13 +93,7 @@ def load_eventbrite(max_events=500):
     while count < max_events and has_more_items:
         for item in response.json()["events"]:
             event = EventbriteEvent.from_dict(item)
-            event_id, source = event.get_id(), event.get_source()
-            delete_event(event_id, source)
-            delete_event_attendees(event_id, source)
-            load_event(event)
-
-            for attendee in event.get_attendees():
-                load_attendee(attendee, event_id, source)
+            load_event_data(event)
             count += 1
 
         continuation = response.json()["pagination"].get("continuation", None)

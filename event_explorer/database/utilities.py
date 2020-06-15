@@ -107,3 +107,18 @@ def delete_event_attendees(event_id, source):
     with connection.cursor() as cursor:
         cursor.execute(sql)
     connection.commit()
+
+
+def load_event_data(event):
+    """Loads an event and attendees into the database
+
+    event : event_explorer.external_service.base.Event
+        The entry to load into the database
+    """
+    event_id, source = event.get_id(), event.get_source()
+    delete_event(event_id, source)
+    delete_event_attendees(event_id, source)
+    load_event(event)
+
+    for attendee in event.get_attendees():
+        load_attendee(attendee, event_id, source)

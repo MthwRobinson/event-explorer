@@ -5,6 +5,7 @@ import time
 
 import jwt
 
+from event_explorer.database.utilities import load_event_data
 from event_explorer.external_services.base import Attendee, Event, ExternalService, get
 
 
@@ -111,3 +112,41 @@ def generate_jwt(key, secret):
 
     token = jwt.encode(payload, secret, algorithm="HS256", headers=header)
     return token.decode("utf-8")
+
+
+def load_zoom(user_id="me", max_events=500):
+    """Loads Zoom events into the RDS database.
+
+    Parameters
+    ----------
+    user_id : str
+        The user id of the account that organized the meetings
+    max_events : int
+        The maximum number of events to load into the database
+    """
+    zoom = Zoom()
+    response = zoom.get(f"/users/{user_id}/meetings")
+    pages = response.json().get("page_count")
+    count = 0
+    for page_number in reversed(range(1, pages + 1)):
+        if count > max_events:
+            break
+        response = zoom.get(f"/users/{user_id}/meetings?page_number={page_number}")
+        meetings = response.json()["meetings"]
+        for item in reversed(meetings):
+            meeting = ZoomEvent.from_dict(item)
+            load_event_data(meeting)
+            count += 1
+
+
+def list_zoom_users():
+    """Lists all of the users for the Zoom account.
+
+    Returns
+    -------
+    users : list(dict)
+        A list of all the users for the account.
+    """
+    zoom = Zoom()
+    response = zoom.get("/users")
+    return response.json()["users"]
