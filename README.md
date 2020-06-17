@@ -91,9 +91,11 @@ something similar to the following in `$HOME/.bashrc`:
 
 ```bash
 export FIDDLER_RDS=<fiddler-rds-uri>
+export RDS_USER=<db-username>
 ```
 
-You should replace `<fiddler-rds-uri>` with the actual URI, which you can get by asking Matt
+You should replace `<fiddler-rds-uri>` with the actual URI and `<db-username>` with your Postgre username.
+You can get the RDS URI from Matt if you need it.
 if you don't have it already. You'll also need to set up a `.pgpass` in your home
 directory with the following contents. Run `chmod 0600 ~/.pgpass` to ensure the file has
 the correct security permissions, otherwise authentication will fail:
