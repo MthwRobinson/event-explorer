@@ -23,7 +23,8 @@ def test_connection_works_with_env(monkeypatch):
 
 def test_connection_raises_error_with_no_env(monkeypatch):
     fiddler_rds = os.environ.get("FIDDLER_RDS")
-    del os.environ["FIDDLER_RDS"]
+    if fiddler_rds:
+        del os.environ["FIDDLER_RDS"]
 
     monkeypatch.setattr(psycopg2, "connect", lambda user, host, dbname: host)
     with pytest.raises(ValueError):
