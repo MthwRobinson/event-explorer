@@ -37,15 +37,26 @@ TEST_ATTENDEES = {
 
 
 def test_eventbrite_gets_token_from_eviron(monkeypatch):
-    monkeypatch.setattr(os.environ, "get", lambda *args, **kwargs: "TEST_TOKEN")
+    real_token = os.environ.get("EVENTBRITE_TOKEN", None)
+    os.environ["EVENTBRITE_TOKEN"] = "TEST_TOKEN"
+
     eventbrite = eventbrite_service.Eventbrite()
     assert eventbrite.headers["Authorization"] == "Bearer TEST_TOKEN"
 
+    if real_token:
+        os.environ["EVENTBRITE_TOKEN"] = real_token
+
 
 def test_eventbrite_raises_error_with_no_token(monkeypatch):
-    monkeypatch.setattr(os.environ, "get", lambda *args, **kwargs: None)
+    real_token = os.environ.get("EVENTBRITE_TOKEN", None)
+    if real_token:
+        del os.environ["EVENTBRITE_TOKEN"]
+
     with pytest.raises(ValueError):
         eventbrite = eventbrite_service.Eventbrite()
+
+    if real_token:
+        os.environ["EVENTBRITE_TOKEN"] = real_token
 
 
 def test_eventbrite_loads_from_dict():
@@ -64,7 +75,9 @@ def test_eventbrite_loads_from_dict():
 
 
 def test_eventbrite_loads_from_id(monkeypatch):
-    monkeypatch.setattr(os.environ, "get", lambda *args, **kwargs: "TEST_TOKEN")
+    real_token = os.environ.get("EVENTBRITE_TOKEN", None)
+    os.environ["EVENTBRITE_TOKEN"] = "TEST_TOKEN"
+
     monkeypatch.setattr(
         eventbrite_service, "get", lambda url, session: MockResponse(TEST_EVENT)
     )
@@ -81,9 +94,14 @@ def test_eventbrite_loads_from_id(monkeypatch):
         TEST_EVENT["description"]["text"],
     )
 
+    if real_token:
+        os.environ["EVENTBRITE_TOKEN"] = real_token
+
 
 def test_eventbrite_event_loads_attendees(monkeypatch):
-    monkeypatch.setattr(os.environ, "get", lambda *args, **kwargs: "TEST_TOKEN")
+    real_token = os.environ.get("EVENTBRITE_TOKEN", None)
+    os.environ["EVENTBRITE_TOKEN"] = "TEST_TOKEN"
+
     monkeypatch.setattr(
         eventbrite_service, "get", lambda url, session: MockResponse(TEST_ATTENDEES)
     )
@@ -94,6 +112,9 @@ def test_eventbrite_event_loads_attendees(monkeypatch):
         attendees[0].get_last_name(),
         attendees[0].get_email(),
     ) == ("Tiki", "Robinson", "tiki@robinson.io")
+
+    if real_token:
+        os.environ["EVENTBRITE_TOKEN"] = real_token
 
 
 def test_load_eventbrite(monkeypatch):

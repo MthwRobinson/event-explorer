@@ -32,15 +32,27 @@ TEST_ATTENDEES = {
 
 
 def test_zoom_gets_token_from_eviron(monkeypatch):
-    monkeypatch.setattr(os.environ, "get", lambda *args, **kwargs: "TEST_TOKEN")
+    real_token = os.environ.get("ZOOM_API_SECRET", None)
+    os.environ["ZOOM_API_SECRET"] = "TEST_TOKEN"
+
     zoom = zoom_service.Zoom()
     assert zoom.headers["Authorization"].startswith("Bearer")
 
+    if real_token:
+        os.environ["ZOOM_API_SECRET"] = real_token
+
 
 def test_zoom_raises_error_with_no_token(monkeypatch):
+    real_token = os.environ.get("ZOOM_API_SECRET", None)
+    if "ZOOM_API_SECRET" in os.environ:
+        del os.environ["ZOOM_API_SECRET"]
+
     monkeypatch.setattr(os.environ, "get", lambda *args, **kwargs: None)
     with pytest.raises(ValueError):
         zoom = zoom_service.Zoom()
+
+    if real_token:
+        os.environ["ZOOM_API_SECRET"] = real_token
 
 
 def test_zoom_loads_from_dict():
@@ -59,7 +71,9 @@ def test_zoom_loads_from_dict():
 
 
 def test_zoom_loads_from_id(monkeypatch):
-    monkeypatch.setattr(os.environ, "get", lambda *args, **kwargs: "TEST_TOKEN")
+    real_token = os.environ.get("ZOOM_API_SECRET", None)
+    os.environ["ZOOM_API_SECRET"] = "TEST_TOKEN"
+
     monkeypatch.setattr(
         zoom_service, "get", lambda url, session: MockResponse(TEST_EVENT)
     )
@@ -76,9 +90,14 @@ def test_zoom_loads_from_id(monkeypatch):
         None,
     )
 
+    if real_token:
+        os.environ["ZOOM_API_SECRET"] = real_token
+
 
 def test_zoom_event_loads_attendees(monkeypatch):
-    monkeypatch.setattr(os.environ, "get", lambda *args, **kwargs: "TEST_TOKEN")
+    real_token = os.environ.get("ZOOM_API_SECRET", None)
+    os.environ["ZOOM_API_SECRET"] = "TEST_TOKEN"
+
     monkeypatch.setattr(
         zoom_service, "get", lambda url, session: MockResponse(TEST_ATTENDEES)
     )
@@ -89,6 +108,9 @@ def test_zoom_event_loads_attendees(monkeypatch):
         attendees[0].get_last_name(),
         attendees[0].get_email(),
     ) == ("Tiki", "Robinson", "tiki@robinson.io")
+
+    if real_token:
+        os.environ["ZOOM_API_SECRET"] = real_token
 
 
 def test_load_zoom(monkeypatch):
