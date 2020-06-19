@@ -38,6 +38,7 @@ def test_connection_works_with_defaults(monkeypatch):
 
 def test_connection_passes_kwargs(monkeypatch):
     current_environ = dict(os.environ)
+    os.environ["FIDDLER_RDS"] = "test_host"
 
     monkeypatch.setattr(
         psycopg2,
