@@ -113,6 +113,22 @@ from event_explorer.database.connection import connect
 connection = connect()
 ```
 
+Optionally, you can also pass in any keyword argument that is accepted by `psycopg2`.
+Keyword arguments take precedence over both environmental variables and defaults. For
+example:
+
+```python
+import getpass
+
+from event_explorer.database.connection import connect
+
+user = "matt"
+password = getpass.getpass() # Masked input for password
+host = "super-awesome-rds-uri"
+
+connection = connect(user=user, password=password, host=host)
+```
+
 ### Using APIs for External Services
 
 API calls in Event Explorer implemented wrappers around the `requests.Session` class
@@ -185,6 +201,21 @@ can load events and attendees into the database using the following workflow:
 from event_explorer.external_services.zoom import load_zoom
 
 load_zoom(user_id="jabber@parrots.com", max_events=20)
+```
+
+Any database connection args you include will be passed through to the `connect`
+function. To run the load process with settings other than the default (or what's stored
+in your environment), use the following workflow:
+
+```python
+import getpass
+
+from event_explorer.external_services.zoom import load_zoom
+
+user = "matt"
+password = getpass.getpass() # Masked input for password
+
+load_zoom(user_id="jabber@parrots.com", max_events=20, user=user, password=password)
 ```
 
 Each external service has its own load function. Do note, not all load functions have
