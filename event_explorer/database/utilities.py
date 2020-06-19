@@ -8,7 +8,8 @@ def _connect():
     """Establishing connection as a module level variable so a new connection is not
     established for each query."""
     global connection
-    connection = connect()
+    if not connection:
+        connection = connect()
 
 
 def load_attendee(attendee, event_id, source):
