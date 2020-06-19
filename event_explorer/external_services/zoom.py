@@ -114,7 +114,7 @@ def generate_jwt(key, secret):
     return token.decode("utf-8")
 
 
-def load_zoom(user_id="me", max_events=500):
+def load_zoom(user_id="me", max_events=500, **connection_kwargs):
     """Loads Zoom events into the RDS database.
 
     Parameters
@@ -135,7 +135,7 @@ def load_zoom(user_id="me", max_events=500):
         meetings = response.json()["meetings"]
         for item in reversed(meetings):
             meeting = ZoomEvent.from_dict(item)
-            load_event_data(meeting)
+            load_event_data(meeting, **connection_kwargs)
             count += 1
 
 

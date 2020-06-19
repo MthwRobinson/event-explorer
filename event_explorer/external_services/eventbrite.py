@@ -78,7 +78,7 @@ class EventbriteAttendee(Attendee):
         return self.attendee["profile"].get("email", None)
 
 
-def load_eventbrite(max_events=500):
+def load_eventbrite(max_events=500, **connection_kwargs):
     """Loads Eventbrite events into the database
 
     Parameters
@@ -93,7 +93,7 @@ def load_eventbrite(max_events=500):
     while count < max_events and has_more_items:
         for item in response.json()["events"]:
             event = EventbriteEvent.from_dict(item)
-            load_event_data(event)
+            load_event_data(event, **connection_kwargs)
             count += 1
 
         continuation = response.json()["pagination"].get("continuation", None)
