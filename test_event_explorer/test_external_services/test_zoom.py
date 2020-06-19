@@ -35,11 +35,16 @@ def test_zoom_gets_token_from_eviron(monkeypatch):
     real_token = os.environ.get("ZOOM_API_SECRET", None)
     os.environ["ZOOM_API_SECRET"] = "TEST_TOKEN"
 
+    real_key = os.environ.get("ZOOM_API_KEY")
+    os.environ["ZOOM_API_KEY"] = "TEST_KEY"
+
     zoom = zoom_service.Zoom()
     assert zoom.headers["Authorization"].startswith("Bearer")
 
     if real_token:
         os.environ["ZOOM_API_SECRET"] = real_token
+    if real_key:
+        os.environ["ZOOM_API_KEY"] = real_key
 
 
 def test_zoom_raises_error_with_no_token(monkeypatch):
@@ -74,6 +79,9 @@ def test_zoom_loads_from_id(monkeypatch):
     real_token = os.environ.get("ZOOM_API_SECRET", None)
     os.environ["ZOOM_API_SECRET"] = "TEST_TOKEN"
 
+    real_key = os.environ.get("ZOOM_API_KEY")
+    os.environ["ZOOM_API_KEY"] = "TEST_KEY"
+
     monkeypatch.setattr(
         zoom_service, "get", lambda url, session: MockResponse(TEST_EVENT)
     )
@@ -92,11 +100,16 @@ def test_zoom_loads_from_id(monkeypatch):
 
     if real_token:
         os.environ["ZOOM_API_SECRET"] = real_token
+    if real_key:
+        os.environ["ZOOM_API_KEY"] = real_key
 
 
 def test_zoom_event_loads_attendees(monkeypatch):
     real_token = os.environ.get("ZOOM_API_SECRET", None)
     os.environ["ZOOM_API_SECRET"] = "TEST_TOKEN"
+
+    real_key = os.environ.get("ZOOM_API_KEY")
+    os.environ["ZOOM_API_KEY"] = "TEST_KEY"
 
     monkeypatch.setattr(
         zoom_service, "get", lambda url, session: MockResponse(TEST_ATTENDEES)
@@ -111,6 +124,8 @@ def test_zoom_event_loads_attendees(monkeypatch):
 
     if real_token:
         os.environ["ZOOM_API_SECRET"] = real_token
+    if real_key:
+        os.environ["ZOOM_API_KEY"] = real_key
 
 
 def test_load_zoom(monkeypatch):
