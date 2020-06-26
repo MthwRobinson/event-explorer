@@ -21,7 +21,7 @@ TEST_EVENT = {
     "topic": "Dogs.com Info Session",
     "start_time": "2020-04-11T03:04:00Z",
     "timezone": "America/New_York",
-    "agenda": "Organized meetings have agendas, fun meetings have descriptions."
+    "agenda": "Organized meetings have agendas, fun meetings have descriptions.",
 }
 
 
