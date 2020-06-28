@@ -57,7 +57,7 @@ class ZoomEvent(Event):
         return time.astimezone(to_zone)
 
     def get_description(self):
-        description = self.event.get("agenda")
+       return description = self.event.get("agenda")
 
     def get_attendees(self):
         if self.attendees is None:

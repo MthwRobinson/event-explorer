@@ -72,7 +72,7 @@ def test_zoom_loads_from_dict():
         TEST_EVENT["uuid"],
         TEST_EVENT["topic"],
         datetime.datetime(2020, 4, 10, 23, 4, tzinfo=tz.gettz("America/New_York")),
-        None,
+        TEST_EVENT['agenda']
     )
 
 
