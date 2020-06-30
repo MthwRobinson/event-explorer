@@ -57,8 +57,7 @@ class ZoomEvent(Event):
         return time.astimezone(to_zone)
 
     def get_description(self):
-        # TODO: Can we get the description anywhere in the Zoom API?
-        return None
+        return self.event.get("agenda")
 
     def get_attendees(self):
         if self.attendees is None:
