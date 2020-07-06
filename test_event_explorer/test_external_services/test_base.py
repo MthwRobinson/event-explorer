@@ -93,3 +93,35 @@ def test_events_to_dataframe():
             }
         ),
     )
+
+
+class MockAttendee(base.Attendee):
+    def __init__(self):
+        pass
+
+    def get_first_name(self):
+        return "Tiki"
+
+    def get_last_name(self):
+        return "Parrot"
+
+    def get_source(self):
+        return "Parrots.com"
+
+    def get_email(self):
+        return "tiki@parrots.com"
+
+
+def test_attendees_to_dataframe():
+    attendee_df = base.attendees_to_dataframe([MockAttendee(), MockAttendee()])
+    pd.testing.assert_frame_equal(
+        attendee_df,
+        pd.DataFrame(
+            {
+                "first_name": ["Tiki"] * 2,
+                "last_name": ["Parrot"] * 2,
+                "email": ["tiki@parrots.com"] * 2,
+                "source": ["Parrots.com"] * 2,
+            }
+        ),
+    )
