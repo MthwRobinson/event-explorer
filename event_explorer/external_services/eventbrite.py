@@ -106,6 +106,7 @@ def load_eventbrite(max_events=500, target="database", **connection_kwargs):
     count = 0
     while count < max_events and has_more_items:
         for item in response.json()["events"]:
+            print(f"Loading event number {count+1}/{max_events}")
             event = EventbriteEvent.from_dict(item)
             if target == "database":
                 load_event_data(event, **connection_kwargs)
@@ -114,6 +115,8 @@ def load_eventbrite(max_events=500, target="database", **connection_kwargs):
                 key = f"{event.get_source()}-{event.get_id()}-{event.get_name()}"
                 attendees[key] = attendees_to_dataframe(event.get_attendees())
             count += 1
+            if count >= max_events:
+                break
 
         continuation = response.json()["pagination"].get("continuation", None)
         response = eventbrite.get(

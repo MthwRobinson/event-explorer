@@ -6,6 +6,7 @@
 #
 certifi==2020.4.5.1       # via requests
 chardet==3.0.4            # via requests
+click==7.1.2              # via -r requirements/base.in
 idna==2.9                 # via requests
 numpy==1.18.4             # via pandas
 pandas==1.0.3             # via -r requirements/base.in

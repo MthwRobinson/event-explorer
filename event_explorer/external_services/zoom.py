@@ -142,11 +142,10 @@ def load_zoom(user_id="me", max_events=500, target="database", **connection_kwar
     pages = response.json().get("page_count")
     count = 0
     for page_number in reversed(range(1, pages + 1)):
-        if count > max_events:
-            break
         response = zoom.get(f"/users/{user_id}/meetings?page_number={page_number}")
         meetings = response.json()["meetings"]
         for item in reversed(meetings):
+            print(f"Loading event number {count+1}/{max_events}")
             meeting = ZoomEvent.from_dict(item)
             if target == "database":
                 load_event_data(meeting, **connection_kwargs)
@@ -155,6 +154,8 @@ def load_zoom(user_id="me", max_events=500, target="database", **connection_kwar
                 key = f"{meeting.get_source()}-{meeting.get_id()}-{meeting.get_name()}"
                 attendees[key] = attendees_to_dataframe(meeting.get_attendees())
             count += 1
+            if count >= max_events:
+                break
 
     return events_to_dataframe(events), attendees
 
