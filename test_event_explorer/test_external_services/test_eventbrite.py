@@ -1,6 +1,7 @@
 import datetime
 import os
 
+import pandas as pd
 import pytest
 
 import event_explorer.external_services.eventbrite as eventbrite_service
@@ -138,3 +139,29 @@ def test_load_eventbrite(monkeypatch):
         eventbrite_service, "load_event_data", lambda *args, **kwargs: None
     )
     eventbrite_service.load_eventbrite()
+
+
+def test_load_eventbrite_to_dataframe(monkeypatch):
+    def mock_get(url):
+        if "attendees" in url:
+            response = TEST_ATTENDEES
+        else:
+            response = {
+                "events": [TEST_EVENT, TEST_EVENT, TEST_EVENT],
+                "pagination": {
+                    "continuation": "abc",
+                    "has_more_items": "continuation" not in url,
+                },
+            }
+        return MockResponse(response)
+
+    eventbrite_service.Eventbrite.__init__ = lambda self: None
+    eventbrite_service.Eventbrite.get = lambda self, url: mock_get(url)
+
+    events, attendees = eventbrite_service.load_eventbrite(target="dataframe")
+    assert isinstance(events, pd.DataFrame) and isinstance(attendees, dict)
+
+
+def test_load_eventbrite_raises_with_bad_target():
+    with pytest.raises(ValueError):
+        events, attendees = eventbrite_service.load_eventbrite(target="parrots")

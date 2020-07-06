@@ -4,7 +4,8 @@ import os
 import requests
 
 from event_explorer.database.utilities import load_event_data
-from event_explorer.external_services.base import Attendee, Event, ExternalService, get
+from event_explorer.external_services.base import (Attendee, Event, ExternalService,
+        get, events_to_dataframe, attendees_to_dataframe)
 
 
 class Eventbrite(ExternalService):
@@ -78,14 +79,21 @@ class EventbriteAttendee(Attendee):
         return self.attendee["profile"].get("email", None)
 
 
-def load_eventbrite(max_events=500, **connection_kwargs):
+def load_eventbrite(max_events=500, target="database", **connection_kwargs):
     """Loads Eventbrite events into the database
 
     Parameters
     ----------
     max_events : int
         The maximum number of events to load into the database
+    target : str
+        "database" or "dataframe". If "dataframe", the results do not write to the
+        database. Instead, they are written to dataframes so they can be stored as CSVs.
     """
+    if target not in ["database", "dataframe"]:
+        raise ValueError("The target must be 'database' or 'dataframe'.")
+    events = list()
+    attendees = dict()
     eventbrite = Eventbrite()
     response = eventbrite.get("/users/me/events?order_by=start_desc")
     has_more_items = response.json()["pagination"].get("has_more_items", None)
@@ -93,7 +101,12 @@ def load_eventbrite(max_events=500, **connection_kwargs):
     while count < max_events and has_more_items:
         for item in response.json()["events"]:
             event = EventbriteEvent.from_dict(item)
-            load_event_data(event, **connection_kwargs)
+            if target == "database":
+                load_event_data(event, **connection_kwargs)
+            else:
+                events.append(event)
+                key = f"{event.get_source()}-{event.get_id()}-{event.get_name()}"
+                attendees[key] = attendees_to_dataframe(event.get_attendees())
             count += 1
 
         continuation = response.json()["pagination"].get("continuation", None)
@@ -101,3 +114,5 @@ def load_eventbrite(max_events=500, **connection_kwargs):
             f"/users/me/events?order_by=start_desc&continuation={continuation}"
         )
         has_more_items = response.json()["pagination"].get("has_more_items", None)
+
+    return events_to_dataframe(events), attendees
