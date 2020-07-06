@@ -4,8 +4,14 @@ import os
 import requests
 
 from event_explorer.database.utilities import load_event_data
-from event_explorer.external_services.base import (Attendee, Event, ExternalService,
-        get, events_to_dataframe, attendees_to_dataframe)
+from event_explorer.external_services.base import (
+    Attendee,
+    Event,
+    ExternalService,
+    get,
+    events_to_dataframe,
+    attendees_to_dataframe,
+)
 
 
 class Eventbrite(ExternalService):

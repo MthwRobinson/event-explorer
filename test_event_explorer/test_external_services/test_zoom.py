@@ -2,6 +2,7 @@ import datetime
 from dateutil import tz
 import os
 
+import pandas as pd
 import pytest
 
 import event_explorer.external_services.zoom as zoom_service
@@ -146,6 +147,30 @@ def test_load_zoom(monkeypatch):
 
     monkeypatch.setattr(zoom_service, "load_event_data", lambda *args, **kwargs: None)
     zoom_service.load_zoom()
+
+
+def test_load_zoom_to_df(monkeypatch):
+    def mock_get(url):
+        if "registrants" in url:
+            response = TEST_ATTENDEES
+        else:
+            response = {
+                "meetings": [TEST_EVENT, TEST_EVENT, TEST_EVENT, TEST_EVENT],
+                "page_count": 1,
+                "page_number": 1,
+            }
+        return MockResponse(response)
+
+    zoom_service.Zoom.__init__ = lambda self: None
+    zoom_service.Zoom.get = lambda self, url: mock_get(url)
+
+    events, attendees = zoom_service.load_zoom(target="dataframe")
+    assert isinstance(events, pd.DataFrame) and isinstance(attendees, dict)
+
+
+def test_load_zoom_raises_with_bad_target():
+    with pytest.raises(ValueError):
+        events, attendees = zoom_service.load_zoom(target="parrots")
 
 
 def test_list_users(monkeypatch):

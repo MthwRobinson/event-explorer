@@ -6,7 +6,14 @@ import time
 import jwt
 
 from event_explorer.database.utilities import load_event_data
-from event_explorer.external_services.base import Attendee, Event, ExternalService, get
+from event_explorer.external_services.base import (
+    Attendee,
+    Event,
+    ExternalService,
+    get,
+    events_to_dataframe,
+    attendees_to_dataframe,
+)
 
 
 class Zoom(ExternalService):
@@ -113,7 +120,7 @@ def generate_jwt(key, secret):
     return token.decode("utf-8")
 
 
-def load_zoom(user_id="me", max_events=500, **connection_kwargs):
+def load_zoom(user_id="me", max_events=500, target="database", **connection_kwargs):
     """Loads Zoom events into the RDS database.
 
     Parameters
@@ -122,7 +129,14 @@ def load_zoom(user_id="me", max_events=500, **connection_kwargs):
         The user id of the account that organized the meetings
     max_events : int
         The maximum number of events to load into the database
+    target : str
+        "database" or "dataframe". If "dataframe", the results do not write to the
+        database. Instead, they are written to dataframes so they can be stored as CSVs.
     """
+    if target not in ["database", "dataframe"]:
+        raise ValueError("The target must be 'database' or 'dataframe'.")
+    events = list()
+    attendees = dict()
     zoom = Zoom()
     response = zoom.get(f"/users/{user_id}/meetings")
     pages = response.json().get("page_count")
@@ -134,8 +148,15 @@ def load_zoom(user_id="me", max_events=500, **connection_kwargs):
         meetings = response.json()["meetings"]
         for item in reversed(meetings):
             meeting = ZoomEvent.from_dict(item)
-            load_event_data(meeting, **connection_kwargs)
+            if target == "database":
+                load_event_data(meeting, **connection_kwargs)
+            else:
+                events.append(meeting)
+                key = f"{meeting.get_source()}-{meeting.get_id()}-{meeting.get_name()}"
+                attendees[key] = attendees_to_dataframe(meeting.get_attendees())
             count += 1
+
+    return events_to_dataframe(events), attendees
 
 
 def list_zoom_users():
