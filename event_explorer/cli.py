@@ -48,7 +48,7 @@ def events_to_csv(directory, source, max_events=500):
 
     for key, event_attendees in attendees.items():
         filename = os.path.join(attendees_directory, f"{key.replace('/', '-')}.csv")
-        filename = filename.replace(" ", "-")
+        filename = filename.replace(" ", "-").replace("'", "")
         print(f"Writing to file: {filename}")
         event_attendees.to_csv(filename, index=False)
 
