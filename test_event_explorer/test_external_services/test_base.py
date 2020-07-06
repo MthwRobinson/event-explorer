@@ -1,3 +1,6 @@
+import datetime
+
+import pandas as pd
 import pytest
 import requests
 
@@ -54,3 +57,39 @@ def test_get_url_raises_with_bad_status_code():
     external_service.base_url = "https://api.dogs.com"
     with pytest.raises(ValueError):
         response = base.get("/bones", external_service)
+
+
+class MockEvent(base.Event):
+    def __init__(self):
+        pass
+
+    def get_id(self):
+        return "1234"
+
+    def get_name(self):
+        return "Parrot Party"
+
+    def get_source(self):
+        return "Parrots.com"
+
+    def get_time(self):
+        return datetime.datetime(2019, 1, 1)
+
+    def get_description(self):
+        return "Lotsa parrots!"
+
+
+def test_events_to_dataframe():
+    event_df = base.events_to_dataframe([MockEvent(), MockEvent()])
+    pd.testing.assert_frame_equal(
+        event_df,
+        pd.DataFrame(
+            {
+                "id": ["1234"] * 2,
+                "name": ["Parrot Party"] * 2,
+                "source": ["Parrots.com"] * 2,
+                "time": [datetime.datetime(2019, 1, 1)] * 2,
+                "description": ["Lotsa parrots!"] * 2,
+            }
+        ),
+    )

@@ -1,3 +1,4 @@
+import pandas as pd
 from requests import Session
 
 
@@ -92,3 +93,50 @@ def get(url, session):
     else:
         status_code = response.status_code
         raise ValueError(f"{session} API failed. Status code: {status_code}")
+
+
+def events_to_dataframe(events):
+    """Converts a list of events into a pandas dataframe
+
+    Parameters
+    ----------
+    events : list
+        A list of events
+
+    Returns
+    -------
+    events_dataframe : pd.DataFrame
+        A dataframe containing the event information
+    """
+    columns = ["id", "name", "source", "time", "description"]
+    data = {column: list() for column in columns}
+    for event in events:
+        data["id"].append(event.get_id())
+        data["name"].append(event.get_name())
+        data["source"].append(event.get_source())
+        data["time"].append(event.get_time())
+        data["description"].append(event.get_description())
+    return pd.DataFrame(data)
+
+
+def attendees_to_dataframe(attendees):
+    """Converts a list of attendees into a pandas dataframe
+
+    Parameters
+    ----------
+    attendees : list
+        A list of attendees
+
+    Returns
+    -------
+    attendees_dataframe : pd.DataFrame
+        A dataframe containing the attendee information
+    """
+    columns = ["first_name", "last_name", "email", "source"]
+    data = {column: list() for column in columns}
+    for attendee in attendees:
+        data["first_name"].append(attendee.get_first_name())
+        data["last_name"].append(attendee.get_last_name())
+        data["email"].append(attendee.get_email())
+        data["source"].append(attendee.get_source())
+    return pd.DataFrame(data)
