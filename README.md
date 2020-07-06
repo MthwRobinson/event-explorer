@@ -3,21 +3,7 @@
 
 
 ## Getting started
-
-To install the UI, run the following from the root directory of the project:
-
-```
-make install-ui
-```
-
-After installing the UI dependency, you can run the UI in development mode using the
-following command:
-
-```
-make start-ui
-```
-
-To install the Python backend, run the following command:
+To install the Python app, run the following command:
 
 ```
 make pip-install
@@ -225,3 +211,36 @@ options are available.
 
 Note, for the above to work, you'll need the appropriate API token environmental
 variables set (see above for details).
+
+### Loading events to CSV files
+
+Alternatively, you can load events to pandas dataframes or CSV usings the Python API or
+the CLI. To load events to CSVs, use the following workflow:
+
+```python
+from event_explorer.external_services.zoom import load_zoom
+
+events, attendees = load_zoom(user_id="jabber@parrots.com", target="dataframe", max_events=20)
+```
+
+In the output, `events` will be a CSV with the summary info for all of the events, and
+`attendees` will be a dictionary that contains the events for each individual event.
+
+
+To write the output to CSV files, use the following CLI command from the terminal:
+```
+event_explorer events-to-csv --directory <result-directory> \
+                             --source <source> \
+                             --max-events <max-events>
+```
+
+For example, you can do
+```
+event_explorer events-to-csv --directory /home/matt/data \
+                             --source eventbrite \
+                             --max-events 50
+```
+
+That would write create a CSV file called `/home/matt/data/eventbrite.csv` with the
+summary info for the first 50 events. A file with attendee data for each individual
+event would appear in `/home/matt/data/eventbrite`.
