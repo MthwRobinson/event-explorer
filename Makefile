@@ -3,7 +3,6 @@
 #######################
 
 lint:
-	prettier ui/src --check
 	black event_explorer --check
 
 lint-black:
@@ -11,7 +10,6 @@ lint-black:
 	black test_event_explorer --check
 
 tidy:
-	prettier ui/src --write
 	black event_explorer
 	black test_event_explorer
 
